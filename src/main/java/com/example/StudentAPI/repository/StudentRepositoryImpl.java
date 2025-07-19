@@ -1,7 +1,8 @@
 package com.example.StudentAPI.repository;
 
 import com.example.StudentAPI.model.Student;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -14,38 +15,72 @@ import java.util.UUID;
 public class StudentRepositoryImpl implements StudentRepository {
 
     private final NamedParameterJdbcTemplate db;
+    private static final Logger logger = LoggerFactory.getLogger(StudentRepositoryImpl.class);
 
     public StudentRepositoryImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.db = namedParameterJdbcTemplate;
     }
 
     @Override
-    public int addStudent(Student student) {
-        return db.update(StudentsSqlExpressions.INSERT, parametros(student));
+    public List<Student> findAll() {
+        List<Student> estudantes;
+                try{
+                   estudantes = db.query(StudentsSqlExpressions.GET_ALL, rowMapper);
+                }catch(Exception ex){
+                    logger.error("Houve um erro ao consultar estudantes. {}", ex.getMessage());
+                    throw ex;
+                }
+        return estudantes;
     }
 
     @Override
-    public List<Student> getAllStudents() {
-        return db.query(StudentsSqlExpressions.GET_ALL, rowMapper);
+    public Student findById(UUID id) {
+        Student estudante;
+        try{
+            MapSqlParameterSource params = new MapSqlParameterSource()
+                                            .addValue("id", id);
+            estudante = db.queryForObject(StudentsSqlExpressions.GET_BY_ID,params, rowMapper);
+        }catch (Exception ex){
+            logger.error("Houve um erro ao consultar estudante. {}", ex.getMessage());
+            throw ex;
+        }
+        return estudante;
     }
 
     @Override
-    public Student getStudentById(UUID id) {
-        MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("id", id);
-        return db.queryForObject(StudentsSqlExpressions.GET_BY_ID,params, rowMapper);
+    public boolean inserir(Student student) {
+        try {
+            int linhasAfetadas = db.update(StudentsSqlExpressions.INSERT, parametros(student));
+            return linhasAfetadas > 0;
+        }catch (Exception ex){
+            logger.error("Houve um erro ao inserir estudante. {}", ex.getMessage());
+            throw ex;
+        }
     }
 
     @Override
-    public int updateStudent(Student student) {
-        return db.update(StudentsSqlExpressions.UPDATE, parametros(student));
+    public boolean atualizar(Student student) {
+        try{
+            int linhasAfetadas = db.update(StudentsSqlExpressions.UPDATE, parametros(student));
+            return linhasAfetadas > 0;
+        }catch (Exception ex){
+            logger.error("Houve um erro ao atualizar estudante. {}", ex.getMessage());
+            throw ex;
+        }
     }
 
     @Override
-    public int deleteStudent(UUID id) {
-        MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("id", id);
-        return db.update(StudentsSqlExpressions.DELETE, params);
+    public boolean excluir(UUID id) {
+        try {
+            MapSqlParameterSource params = new MapSqlParameterSource()
+                    .addValue("id", id);
+            int linhasAfetadas = db.update(StudentsSqlExpressions.DELETE, params);
+            ;
+            return linhasAfetadas == 0;
+        }catch (Exception ex){
+            logger.error("Houve um erro ao excluir estudante. {}", ex.getMessage());
+            throw ex;
+        }
     }
 
     RowMapper<Student> rowMapper = (rs, rowNum) -> new Student(

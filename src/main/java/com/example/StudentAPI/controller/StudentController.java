@@ -27,27 +27,27 @@ public class StudentController {
 
     @GetMapping("/students")
     public List<Student> getStudents() {
-        return studentRepository.getAllStudents();
+        return studentRepository.findAll();
     }
 
     @GetMapping("/students/{id}")
     public Student getStudent(@PathVariable UUID id) {
-        return studentRepository.getStudentById(id);
+        return studentRepository.findById(id);
     }
 
     @PostMapping("/students")
-    public int insertStudent(@RequestBody Student student) {
-        return studentRepository.addStudent(student);
+    public boolean insertStudent(@RequestBody Student student) {
+        return studentRepository.inserir(student);
     }
 
     @PutMapping("/students/{id}")
-    public int updateStudent(@PathVariable UUID id, @RequestBody Student student) {
-        return studentRepository.updateStudent(student);
+    public boolean updateStudent(@PathVariable UUID id, @RequestBody Student student) {
+        return studentRepository.atualizar(student);
     }
 
     @DeleteMapping("/students/{id}")
-    public int deleteStudent(@PathVariable UUID id) {
-        return studentRepository.deleteStudent(id);
+    public boolean deleteStudent(@PathVariable UUID id) {
+        return studentRepository.excluir(id);
     }
 
 

@@ -7,9 +7,9 @@ import java.util.UUID;
 
 public interface StudentRepository {
 
-    public int addStudent(Student student);
-    public List<Student> getAllStudents();
-    public Student getStudentById(UUID id);
-    public int updateStudent(Student student);
-    public int deleteStudent(UUID id);
+    public List<Student> findAll();
+    public Student findById(UUID id);
+    public boolean inserir(Student student);
+    public boolean atualizar(Student student);
+    public boolean excluir(UUID id);
 }
