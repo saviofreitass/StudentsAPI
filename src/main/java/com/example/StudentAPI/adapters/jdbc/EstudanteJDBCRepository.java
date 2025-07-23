@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Repository
@@ -60,9 +61,9 @@ public class EstudanteJDBCRepository implements EstudanteRepository {
     }
 
     @Override
-    public boolean atualizar(Estudante estudante) {
+    public boolean atualizar(UUID id, Estudante estudante) {
         try{
-            int linhasAfetadas = db.update(EstudanteSQLExpression.UPDATE, params(estudante));
+            int linhasAfetadas = db.update(EstudanteSQLExpression.UPDATE, params(id, estudante));
             return linhasAfetadas > 0;
         }catch (Exception ex) {
             logger.error("Erro ao atualizar estudante, {}", ex.getMessage());
@@ -96,6 +97,19 @@ public class EstudanteJDBCRepository implements EstudanteRepository {
         params.addValue("nome", estudante.getNome());
         params.addValue("contato", estudante.getContato());
         params.addValue("endereco", estudante.getEndereco());
+        return params;
+    }
+
+    private MapSqlParameterSource params(UUID id, Estudante estudanteAtualizado) {
+        Estudante estudanteAtual = findById(id);
+        String nome = estudanteAtualizado.getNome() != null ? estudanteAtualizado.getNome() : estudanteAtual.getNome();
+        String contato = estudanteAtualizado.getContato() != null ? estudanteAtualizado.getContato() : estudanteAtual.getContato();
+        String endereco = estudanteAtualizado.getEndereco() != null ? estudanteAtualizado.getEndereco() : estudanteAtual.getEndereco();
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", id);
+        params.addValue("nome", nome);
+        params.addValue("contato", contato);
+        params.addValue("endereco", endereco);
         return params;
     }
 }

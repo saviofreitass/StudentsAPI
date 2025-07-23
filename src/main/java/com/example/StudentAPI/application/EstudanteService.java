@@ -31,7 +31,7 @@ public class EstudanteService {
     }
 
     public Estudante atualizar(EstudanteCommand estudante, UUID id){
-        estudanteRepository.atualizar(EstudanteMapper.toEstudante(estudante));
+        estudanteRepository.atualizar(id, EstudanteMapper.toEstudante(estudante));
         return estudanteRepository.findById(id);
     }
 

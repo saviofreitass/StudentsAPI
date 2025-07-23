@@ -8,6 +8,6 @@ public interface EstudanteRepository {
     public List<Estudante> findAll();
     public Estudante findById(UUID id);
     public boolean inserir(Estudante estudante);
-    public boolean atualizar(Estudante estudante);
+    public boolean atualizar(UUID id, Estudante estudante);
     public boolean deletar(UUID id);
 }

@@ -39,7 +39,6 @@ public class EstudanteController {
 
     @PutMapping("/estudantes/{id}")
     public ResponseEntity<Estudante> atualizar(@RequestBody EstudanteCommand estudante, @PathVariable String id) {
-        System.out.println(estudante);
         return estudanteHandler.atualizar(estudante, id);
     }
 
