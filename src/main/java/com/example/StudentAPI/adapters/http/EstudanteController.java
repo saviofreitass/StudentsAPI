@@ -29,7 +29,7 @@ public class EstudanteController {
         return estudanteHandler.findAll();
     }
 
-    @GetMapping("/estudantes/{id:$UUID_REGEX}")
+    @GetMapping("/estudantes/{id}")
     public ResponseEntity<Estudante> findById(@PathVariable UUID id) {
         return estudanteHandler.findById(id);
     }

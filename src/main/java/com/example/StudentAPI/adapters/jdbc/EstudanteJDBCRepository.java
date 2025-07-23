@@ -1,5 +1,6 @@
 package com.example.StudentAPI.adapters.jdbc;
 
+import com.example.StudentAPI.application.exceptions.EstudanteExceptions;
 import com.example.StudentAPI.domain.Estudante;
 import com.example.StudentAPI.domain.EstudanteRepository;
 import org.slf4j.Logger;
@@ -10,7 +11,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @Repository
@@ -42,6 +42,9 @@ public class EstudanteJDBCRepository implements EstudanteRepository {
             MapSqlParameterSource params = new MapSqlParameterSource()
                     .addValue("id", id);
             estudante = db.queryForObject(EstudanteSQLExpression.GET_BY_ID, params, rowMapper);
+            if(estudante == null){
+                throw new EstudanteExceptions(id);
+            }
         }catch (Exception ex) {
             logger.error("Erro ao buscar estudante, {}", ex.getMessage());
             throw ex;
