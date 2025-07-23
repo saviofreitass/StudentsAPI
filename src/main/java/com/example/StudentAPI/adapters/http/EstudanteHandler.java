@@ -23,8 +23,8 @@ public class EstudanteHandler {
         return ResponseEntity.ok(estudantes);
     }
 
-    public ResponseEntity<Estudante> findById(String id) {
-        Estudante estudante = estudanteService.findById(UUID.fromString(id));
+    public ResponseEntity<Estudante> findById(UUID id) {
+        Estudante estudante = estudanteService.findById(id);
         return ResponseEntity.ok(estudante);
     }
 
@@ -33,13 +33,13 @@ public class EstudanteHandler {
         return ResponseEntity.status(HttpStatus.CREATED).body(estudante);
     }
 
-    public ResponseEntity<Estudante> atualizar(EstudanteCommand estudanteCommand, String id) {
-        Estudante estudante = estudanteService.atualizar(estudanteCommand, UUID.fromString(id));
+    public ResponseEntity<Estudante> atualizar(EstudanteCommand estudanteCommand, UUID id) {
+        Estudante estudante = estudanteService.atualizar(estudanteCommand, id);
         return ResponseEntity.ok(estudante);
     }
 
-    public ResponseEntity<String> excluir(String id) {
-        estudanteService.excluir(UUID.fromString(id));
+    public ResponseEntity<String> excluir(UUID id) {
+        estudanteService.excluir(id);
         return ResponseEntity.noContent().build();
     }
 }

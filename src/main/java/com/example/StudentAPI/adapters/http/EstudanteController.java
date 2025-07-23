@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
+
 
 @RestController
 public class EstudanteController {
@@ -27,8 +29,8 @@ public class EstudanteController {
         return estudanteHandler.findAll();
     }
 
-    @GetMapping("/estudantes/{id}")
-    public ResponseEntity<Estudante> findById(@PathVariable String id) {
+    @GetMapping("/estudantes/{id:$UUID_REGEX}")
+    public ResponseEntity<Estudante> findById(@PathVariable UUID id) {
         return estudanteHandler.findById(id);
     }
 
@@ -38,12 +40,12 @@ public class EstudanteController {
     }
 
     @PutMapping("/estudantes/{id}")
-    public ResponseEntity<Estudante> atualizar(@RequestBody EstudanteCommand estudante, @PathVariable String id) {
+    public ResponseEntity<Estudante> atualizar(@RequestBody EstudanteCommand estudante, @PathVariable UUID id) {
         return estudanteHandler.atualizar(estudante, id);
     }
 
     @DeleteMapping("/estudantes/{id}")
-    public ResponseEntity<String> excluir(@PathVariable String id) {
+    public ResponseEntity<String> excluir(@PathVariable UUID id) {
         return estudanteHandler.excluir(id);
     }
 }
